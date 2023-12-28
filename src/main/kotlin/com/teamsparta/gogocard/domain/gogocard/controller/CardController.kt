@@ -3,7 +3,6 @@ package com.teamsparta.gogocard.domain.gogocard.controller
 import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
 import com.teamsparta.gogocard.domain.gogocard.dto.CreateCardRequest
 import com.teamsparta.gogocard.domain.gogocard.dto.UpdateCardRequest
-import com.teamsparta.gogocard.domain.gogocard.model.CardEntity
 import com.teamsparta.gogocard.domain.gogocard.service.CardService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -43,7 +42,7 @@ class CardController (
     ): ResponseEntity<CardResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(cardService.updateCard(updateCardRequest))
+            .body(cardService.updateCard(cardId, updateCardRequest))
     }
 
     @DeleteMapping("/{cardId}")

@@ -24,7 +24,7 @@ class CardServiceImpl(
         TODO("요청에 따라 할 일 카드를 생성한다.")
     }
 
-    override fun updateCard(request: UpdateCardRequest): CardResponse {
+    override fun updateCard(cardId:Long, request: UpdateCardRequest): CardResponse {
         TODO("db에 저장된 할 일 카드를 불러온 뒤, 원하는 값으로 수정하여 db에 CardResponse 형태로 저장한다.")
     }
 

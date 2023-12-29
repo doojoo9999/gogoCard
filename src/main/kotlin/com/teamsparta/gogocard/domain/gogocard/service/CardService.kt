@@ -14,7 +14,7 @@ interface CardService {
 
     fun updateCard(cardId:Long, request: UpdateCardRequest) : CardResponse
 
-    fun deleteCard(cardId:Long) : CardResponse
+    fun deleteCard(cardId:Long)
 
 
 }

@@ -1,3 +1,6 @@
+api 정리 : https://docs.google.com/spreadsheets/d/1IWMzJh89v_LpKw273MpVAHRYexMn_mpybptselW3sUI/edit#gid=753593791
+
+
 gogoCard API			
 			
 구분	API명	설명	

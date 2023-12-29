@@ -19,14 +19,14 @@ class CardEntity (
     @Column(name = "author", nullable = false)
     var author: String,
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+var id: Long = 0
 }
 
 fun CardEntity.toResponse() : CardResponse {
     return CardResponse(
-        id = id!!,
+        id = id,
         title = title,
         content = content,
         date = LocalDateTime.now(),

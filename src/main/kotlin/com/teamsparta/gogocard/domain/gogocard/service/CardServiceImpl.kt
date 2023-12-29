@@ -34,7 +34,6 @@ class CardServiceImpl(
                 date = request.date
             )
         ).toResponse()
-//        TODO("요청에 따라 할 일 카드를 생성한다.")
     }
 
     @Transactional

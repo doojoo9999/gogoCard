@@ -18,6 +18,9 @@ class CardEntity (
 
     @Column(name = "author", nullable = false)
     var author: String,
+
+    @Column(name = "complete")
+    var complete: Boolean
 ) {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +33,7 @@ fun CardEntity.toResponse() : CardResponse {
         title = title,
         content = content,
         date = LocalDateTime.now(),
-        author = author
-
+        author = author,
+        complete = complete
     )
 }

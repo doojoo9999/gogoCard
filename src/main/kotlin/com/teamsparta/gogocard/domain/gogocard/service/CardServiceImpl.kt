@@ -10,6 +10,7 @@ import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.ui.Model
 
 @Service
 class CardServiceImpl(
@@ -31,7 +32,8 @@ class CardServiceImpl(
                 title = request.title,
                 content = request.content,
                 author = request.author,
-                date = request.date
+                date = request.date,
+                complete = false
             )
         ).toResponse()
     }
@@ -39,11 +41,12 @@ class CardServiceImpl(
     @Transactional
     override fun updateCard(cardId:Long, request: UpdateCardRequest): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
-        val (title, content, author) = request
+        val (title, content, author, complete) = request
 
         card.title = title
         card.content = content
         card.author = author
+        card.complete = complete
 
         return cardRepository.save(card).toResponse()
 
@@ -58,4 +61,7 @@ class CardServiceImpl(
 
 //        TODO("요청된 cardId와 일치하는 카드를 db에서 확인한 뒤, 해당 card를 db에서 삭제한다.")
     }
+
+
+
 }

@@ -1,17 +1,18 @@
 package com.teamsparta.gogocard.domain.gogocard.controller
 
 import com.teamsparta.gogocard.domain.gogocard.dto.*
-import com.teamsparta.gogocard.domain.gogocard.model.CommentEntity
+import com.teamsparta.gogocard.domain.gogocard.model.toResponse
+import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.service.CardService
-import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/cards")
 @RestController
-class CardController (
-    private val cardService: CardService
+class CardController(
+    private val cardService: CardService,
+    private val cardRepository: CardRepository
 ) {
     @GetMapping()
     fun getCardList() : ResponseEntity<List<CardResponse>> {
@@ -82,5 +83,16 @@ class CardController (
             .build()
     }
 
+    @GetMapping("/sort")
+    fun getCardListBySort(
+        @RequestParam("sort") sort: String
+    ) : List<CardResponse> {
+        val card = cardRepository.findAll()
+        return when (sort) {
+            "asc" -> card.sortedBy { it.date }
+            "desc" -> card.sortedByDescending { it.date }
+            else -> card
+        }.map { it.toResponse() }
+    }
 
 }

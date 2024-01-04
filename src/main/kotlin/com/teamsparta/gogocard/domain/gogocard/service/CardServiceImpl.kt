@@ -25,11 +25,11 @@ class CardServiceImpl(
         return cardRepository.findAll().map { it.toResponse() }
     }
 
+    @Transactional
     override fun getCardById(cardId:Long): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
         return card.toResponseWithComments()
     }
-    @Transactional
     override fun createCard(request: CreateCardRequest): CardResponse {
         return cardRepository.save(
             CardEntity(
@@ -54,7 +54,6 @@ class CardServiceImpl(
 
         return cardRepository.save(card).toResponse()
 
-//        TODO("db에 저장된 할 일 카드를 불러온 뒤, 원하는 값으로 수정하여 db에 CardResponse 형태로 저장한다.")
     }
 
     @Transactional
@@ -62,8 +61,6 @@ class CardServiceImpl(
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
         cardRepository.delete(card)
 
-
-//        TODO("요청된 cardId와 일치하는 카드를 db에서 확인한 뒤, 해당 card를 db에서 삭제한다.")
     }
 
     override fun createComment(

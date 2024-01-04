@@ -8,5 +8,6 @@ data class CardResponse(
     val content: String,
     val date: LocalDateTime,
     val author: String,
-    val complete: Boolean
+    val complete: Boolean,
+    val comments : List<CommentResponse> ?= null
 )

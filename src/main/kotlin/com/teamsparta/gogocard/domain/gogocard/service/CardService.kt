@@ -1,8 +1,6 @@
 package com.teamsparta.gogocard.domain.gogocard.service
 
-import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
-import com.teamsparta.gogocard.domain.gogocard.dto.CreateCardRequest
-import com.teamsparta.gogocard.domain.gogocard.dto.UpdateCardRequest
+import com.teamsparta.gogocard.domain.gogocard.dto.*
 
 interface CardService {
 
@@ -15,4 +13,10 @@ interface CardService {
     fun updateCard(cardId:Long, request: UpdateCardRequest) : CardResponse
 
     fun deleteCard(cardId:Long)
+
+    fun createComment(cardId:Long, request: CreateCommentRequest) : CommentResponse
+
+    fun updateComment(cardId:Long, commentId: Long, request: UpdateCommentRequest) : CommentResponse
+
+    fun deleteComment(cardId:Long, commentId: Long, request: DeleteCommentRequest) : CommentResponse
 }

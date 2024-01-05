@@ -11,9 +11,7 @@ import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class CardServiceImpl(
@@ -108,4 +106,17 @@ class CardServiceImpl(
         return commentRepository.save(comment).toResponse()
     }
 
+    override fun getCardByAuthor(
+        cardId: Long,
+        author: String,
+        request: CallCardByAuthorRequest
+    ): List<CardResponse> {
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("card", cardId)
+        if (card.author != request.author) {
+            throw ModelNotFoundException("author", cardId)
+        }
+
+        return cardRepository.findByAuthor(request.author).map { it.toResponse() }
+
+    }
 }

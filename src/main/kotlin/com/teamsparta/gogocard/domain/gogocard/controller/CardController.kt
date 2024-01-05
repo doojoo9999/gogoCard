@@ -15,7 +15,7 @@ class CardController(
     private val cardRepository: CardRepository
 ) {
     @GetMapping()
-    fun getCardList() : ResponseEntity<List<CardResponse>> {
+    fun getCardList(): ResponseEntity<List<CardResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(cardService.getCardList())
@@ -23,14 +23,14 @@ class CardController(
     }
 
     @GetMapping("/{cardId}")
-    fun getCardById(@PathVariable cardId: Long) : ResponseEntity<CardResponse> {
+    fun getCardById(@PathVariable cardId: Long): ResponseEntity<CardResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(cardService.getCardById(cardId))
     }
 
     @PostMapping()
-    fun createCard(@RequestBody createCardRequest: CreateCardRequest) : ResponseEntity<CardResponse> {
+    fun createCard(@RequestBody createCardRequest: CreateCardRequest): ResponseEntity<CardResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(cardService.createCard(createCardRequest))
@@ -38,7 +38,7 @@ class CardController(
 
     @PutMapping("/{cardId}")
     fun updateCard(
-        @PathVariable cardId : Long,
+        @PathVariable cardId: Long,
         @RequestBody updateCardRequest: UpdateCardRequest
     ): ResponseEntity<CardResponse> {
         return ResponseEntity
@@ -47,7 +47,7 @@ class CardController(
     }
 
     @DeleteMapping("/{cardId}")
-    fun deleteCard(@PathVariable cardId:Long) : ResponseEntity<Unit>{
+    fun deleteCard(@PathVariable cardId: Long): ResponseEntity<Unit> {
         cardService.deleteCard(cardId)
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
@@ -56,9 +56,9 @@ class CardController(
 
     @PostMapping("/{cardId}/comments")
     fun createComment(
-    @PathVariable cardId:Long,
-    @RequestBody createCommentRequest: CreateCommentRequest
-    ) : ResponseEntity<CommentResponse> {
+        @PathVariable cardId: Long,
+        @RequestBody createCommentRequest: CreateCommentRequest
+    ): ResponseEntity<CommentResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(cardService.createComment(cardId, createCommentRequest))
@@ -66,9 +66,9 @@ class CardController(
 
     @PutMapping("/{cardId}/comments/{commentId}")
     fun updateComment(
-    @PathVariable cardId:Long, commentId:Long,
-    @RequestBody updateCommentRequest: UpdateCommentRequest
-    ) : ResponseEntity<CommentResponse> {
+        @PathVariable cardId: Long, commentId: Long,
+        @RequestBody updateCommentRequest: UpdateCommentRequest
+    ): ResponseEntity<CommentResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(cardService.updateComment(cardId, commentId, updateCommentRequest))
@@ -77,7 +77,8 @@ class CardController(
 
     @DeleteMapping("/{cardId}/comments/{commentId}")
     fun deleteComment(
-    @PathVariable cardId:Long, commentId:Long) : ResponseEntity<Unit>{
+        @PathVariable cardId: Long, commentId: Long
+    ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build()
@@ -86,7 +87,7 @@ class CardController(
     @GetMapping("/sort")
     fun getCardListBySort(
         @RequestParam("sort") sort: String
-    ) : List<CardResponse> {
+    ): List<CardResponse> {
         val card = cardRepository.findAll()
         return when (sort) {
             "asc" -> card.sortedBy { it.date }
@@ -95,4 +96,14 @@ class CardController(
         }.map { it.toResponse() }
     }
 
+    @GetMapping("/{cardId}/author")
+    fun getCardByAuthor(
+        @PathVariable cardId: Long,
+        @RequestParam author: String,
+        request: CallCardByAuthorRequest
+    ): ResponseEntity<List<CardResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(cardService.getCardByAuthor(cardId, author, request))
+    }
 }

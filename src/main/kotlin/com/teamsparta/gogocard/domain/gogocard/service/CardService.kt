@@ -19,4 +19,6 @@ interface CardService {
     fun updateComment(cardId:Long, commentId: Long, request: UpdateCommentRequest) : CommentResponse
 
     fun deleteComment(cardId:Long, commentId: Long, request: DeleteCommentRequest) : CommentResponse
+
+    fun getCardByAuthor(cardId:Long, author: String, request: CallCardByAuthorRequest) : List<CardResponse>
 }

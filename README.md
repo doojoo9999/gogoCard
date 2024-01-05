@@ -111,3 +111,7 @@ gogoCard API는 할 일 카드를 생성, 조회, 수정, 삭제할 수 있는 R
 | 400 | 카드 제목을 입력해 주세요. |
 | 400 | 카드 내용을 입력해 주세요. |
 | 400 | 작성자를 입력해 주세요. |
+
+
+![image](https://github.com/doojoo9999/gogoCard/assets/96476393/aa07688d-b265-4ace-81aa-5703b842ef9a)
+

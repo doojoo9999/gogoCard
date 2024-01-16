@@ -92,7 +92,7 @@ class CardController(
         return when (sort) {
             "asc" -> card.sortedBy { it.date }
             "desc" -> card.sortedByDescending { it.date }
-            else -> card
+            else -> card.sortedBy { it.date }
         }.map { it.toResponse() }
     }
 
@@ -106,4 +106,16 @@ class CardController(
             .status(HttpStatus.OK)
             .body(cardService.getCardByAuthor(cardId, author, request))
     }
+
+    @PatchMapping("/{cardId}/complete")
+    fun completeCard(
+        @PathVariable cardId: Long,
+    ): ResponseEntity<CardResponse>{
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(cardService.completeCard(cardId))
+    }
+
+
 }

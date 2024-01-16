@@ -21,4 +21,6 @@ interface CardService {
     fun deleteComment(cardId:Long, commentId: Long, request: DeleteCommentRequest) : CommentResponse
 
     fun getCardByAuthor(cardId:Long, author: String, request: CallCardByAuthorRequest) : List<CardResponse>
+
+    fun completeCard (cardId:Long) : CardResponse
 }

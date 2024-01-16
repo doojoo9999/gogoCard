@@ -20,9 +20,6 @@ class CardEntity (
     @Column(name = "author", nullable = false)
     var author: String,
 
-    @Column(name = "complete")
-    var complete: Boolean,
-
     @OneToMany(mappedBy = "card")
     var comments: MutableList<CommentEntity> = mutableListOf()
 
@@ -30,6 +27,17 @@ class CardEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
+
+    @Column(name = "completed", nullable = false)
+    private var _isCompleted: Boolean = false
+
+    val isCompleted: Boolean
+        get() = _isCompleted
+
+    fun complete() {
+        _isCompleted = true
+    }
+
 }
 
 fun CardEntity.toResponse() : CardResponse {
@@ -39,7 +47,7 @@ fun CardEntity.toResponse() : CardResponse {
         content = content,
         date = LocalDateTime.now(),
         author = author,
-        complete = complete
+        complete = isCompleted
     )
 }
 
@@ -50,7 +58,7 @@ fun CardEntity.toResponseWithComments() : CardResponse {
         content = content,
         date = LocalDateTime.now(),
         author = author,
-        complete = complete,
+        complete = isCompleted,
         comments = comments.map { it.toResponse() }
     )
 }

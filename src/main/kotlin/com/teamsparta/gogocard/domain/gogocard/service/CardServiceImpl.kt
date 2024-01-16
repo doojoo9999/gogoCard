@@ -35,7 +35,6 @@ class CardServiceImpl(
                 content = request.content,
                 author = request.author,
                 date = request.date,
-                complete = false
             )
         ).toResponse()
     }
@@ -43,12 +42,11 @@ class CardServiceImpl(
     @Transactional
     override fun updateCard(cardId:Long, request: UpdateCardRequest): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
-        val (title, content, author, complete) = request
+        val (title, content, author) = request
 
         card.title = title
         card.content = content
         card.author = author
-        card.complete = complete
 
         return cardRepository.save(card).toResponse()
 
@@ -118,5 +116,15 @@ class CardServiceImpl(
 
         return cardRepository.findByAuthor(request.author).map { it.toResponse() }
 
+    }
+
+    override fun completeCard(
+        cardId: Long
+    ) : CardResponse {
+        val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("card", cardId)
+
+        card.complete()
+
+        return cardRepository.save(card).toResponse()
     }
 }

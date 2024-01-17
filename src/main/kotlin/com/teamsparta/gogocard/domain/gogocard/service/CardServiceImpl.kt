@@ -12,13 +12,14 @@ import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
 import com.teamsparta.gogocard.infra.aop.StopWatch
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class CardServiceImpl(
     private val cardRepository: CardRepository,
-    private val commentRepository: CommentRepository
-) : CardService {
+    private val commentRepository: CommentRepository,
+    ) : CardService {
 
     override fun getCardList(): List<CardResponse> {
         return cardRepository.findAll().map { it.toResponse() }

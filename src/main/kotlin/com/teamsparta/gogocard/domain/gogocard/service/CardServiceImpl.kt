@@ -9,6 +9,7 @@ import com.teamsparta.gogocard.domain.gogocard.model.toResponse
 import com.teamsparta.gogocard.domain.gogocard.model.toResponseWithComments
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
+import com.teamsparta.gogocard.infra.aop.StopWatch
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -24,6 +25,7 @@ class CardServiceImpl(
     }
 
     @Transactional
+    @StopWatch
     override fun getCardById(cardId:Long): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
         return card.toResponseWithComments()

@@ -7,7 +7,7 @@ gogoCard API는 할 일 카드를 생성, 조회, 수정, 삭제할 수 있는 R
 ---
 ## Card API 명세
 
-### 카드 검색 (제목 기반)
+### 카드 검색 (제목 기준)
 
 - **Endpoint**: `GET /api/cards/search/title`
 - **Auth Required**: Yes (Roles: MEMBER, ADMIN)
@@ -17,12 +17,12 @@ gogoCard API는 할 일 카드를 생성, 조회, 수정, 삭제할 수 있는 R
     - **Code**: `200 OK`
     - **Content**: `List<CardResponse>`
 
-### 카드 검색 (완료 여부 기반)
+### 카드 검색 (완료 여부 기준)
 
 - **Endpoint**: `GET /api/cards/search/complete`
 - **Auth Required**: Yes (Roles: MEMBER, ADMIN)
 - **Parameters**:
-    - `isCompleted` (boolean) - 완료 여부
+    - `isCompleted` (boolean) - 완료 여부 (False -> NO_COMPLETE, TRUE -> COMPLETE)
 - **Success Response**:
     - **Code**: `200 OK`
     - **Content**: `List<CardResponse>`
@@ -124,12 +124,12 @@ gogoCard API는 할 일 카드를 생성, 조회, 수정, 삭제할 수 있는 R
 
 ### 카드 작성자 기반 조회
 
-- **Endpoint**: `GET /api/cards/{cardId}/author`
+- **Endpoint**: `GET /api/cards/{cardId}/userName`
 - **Auth Required**: Yes (Roles: MEMBER, ADMIN)
 - **Path Variables**:
     - `cardId` (long) - 조회하고자 하는 카드의 ID
 - **Parameters**:
-    - `author` (string) - 카드의 작성자
+    - `userName` (string) - 카드의 작성자
 - **Request**: `CallCardByAuthorRequest`
 - **Success Response**:
     - **Code**: `200 OK`

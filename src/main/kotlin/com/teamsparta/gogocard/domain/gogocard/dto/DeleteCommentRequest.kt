@@ -1,6 +1,6 @@
 package com.teamsparta.gogocard.domain.gogocard.dto
 
 data class DeleteCommentRequest (
-    val userName: String,
+    val userId: Long,
     val password: String
 )

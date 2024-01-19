@@ -6,5 +6,5 @@ data class CreateCardRequest(
     val title: String,
     val content: String,
     val date: LocalDateTime,
-    val userName: String
+    val userId: Long,
 )

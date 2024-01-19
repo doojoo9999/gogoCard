@@ -16,8 +16,8 @@ class CommentEntity (
     var password: String,
 
     @ManyToOne
-    @Column (name = "author", nullable = false)
-    var userName : UserEntity,
+    @JoinColumn (name = "user_id", nullable = false)
+    var user : UserEntity,
 
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
@@ -33,6 +33,6 @@ fun CommentEntity.toResponse() : CommentResponse {
     return CommentResponse(
         id = id,
         content = content,
-        userName = userName.userName,
+        userId = user.id,
     )
 }

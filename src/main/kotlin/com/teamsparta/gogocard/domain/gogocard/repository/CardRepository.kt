@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CardRepository : JpaRepository <CardEntity, Long>, CustomCardRepository {
 
-    fun findByAuthor(author: String) : List<CardEntity>
+    fun findByUserId(userId: Long) : List<CardEntity>
 
 }

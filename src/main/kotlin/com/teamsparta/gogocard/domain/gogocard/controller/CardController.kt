@@ -1,18 +1,14 @@
 package com.teamsparta.gogocard.domain.gogocard.controller
 
 import com.teamsparta.gogocard.domain.gogocard.dto.*
-import com.teamsparta.gogocard.domain.gogocard.model.Complete
 import com.teamsparta.gogocard.domain.gogocard.model.toResponse
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.service.CardService
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.annotation.Secured
-import org.springframework.security.access.prepost.PostAuthorize
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -26,6 +22,10 @@ class CardController(
     @GetMapping("/search/title")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     fun searchCardListWithTitle(
+        @PageableDefault(
+            size = 15,
+            sort = ["id"]
+        ) pageable: Pageable,
         @RequestParam(value = "title") title:String
     ): ResponseEntity<List<CardResponse>> {
         return ResponseEntity
@@ -36,6 +36,10 @@ class CardController(
     @GetMapping("/search/complete")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     fun searchCardListWithComplete(
+        @PageableDefault(
+            size = 15,
+            sort = ["id"]
+        ) pageable: Pageable,
         @RequestParam(value = "isCompleted") isCompleted:Boolean
     ): ResponseEntity<List<CardResponse>> {
         return ResponseEntity
@@ -149,12 +153,12 @@ class CardController(
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     fun getCardByAuthor(
         @PathVariable cardId: Long,
-        @RequestParam author: String,
-        request: CallCardByAuthorRequest
+        @RequestParam userId: Long,
+        request: CallCardByUserIdRequest
     ): ResponseEntity<List<CardResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(cardService.getCardByAuthor(cardId, author, request))
+            .body(cardService.getCardByUserId(cardId, userId, request))
     }
 
     @PatchMapping("/{cardId}/complete")

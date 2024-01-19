@@ -1,12 +1,10 @@
 package com.teamsparta.gogocard.domain.gogocard.service
 
 import com.teamsparta.gogocard.domain.exception.ModelNotFoundException
-import com.teamsparta.gogocard.domain.exception.ModelNotMatchException
 import com.teamsparta.gogocard.domain.gogocard.dto.*
 import com.teamsparta.gogocard.domain.gogocard.model.*
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
-import com.teamsparta.gogocard.domain.gogocard.repository.CardRepositoryImpl
 import com.teamsparta.gogocard.domain.user.repository.UserRepository
 import com.teamsparta.gogocard.infra.aop.StopWatch
 import jakarta.transaction.Transactional
@@ -33,12 +31,12 @@ class CardServiceImpl(
         return card.toResponseWithComments()
     }
     override fun createCard(request: CreateCardRequest): CardResponse {
-        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         return cardRepository.save(
             CardEntity(
                 title = request.title,
                 content = request.content,
-                userName = user,
+                user = user,
                 date = request.date,
             )
         ).toResponse()
@@ -47,12 +45,12 @@ class CardServiceImpl(
     @Transactional
     override fun updateCard(cardId:Long, request: UpdateCardRequest): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
-        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         val (title, content, userName) = request
 
         card.title = title
         card.content = content
-        card.userName = user
+        card.user = user
 
         return cardRepository.save(card).toResponse()
 
@@ -70,11 +68,11 @@ class CardServiceImpl(
         request: CreateCommentRequest
     ): CommentResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("card", cardId)
-        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         val comment = CommentEntity(
             content = request.content,
             password = request.password,
-            userName = user,
+            user = user,
             card = card
         )
         return commentRepository.save(comment).toResponse()
@@ -87,7 +85,7 @@ class CardServiceImpl(
     ): CommentResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
-        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
 //        if (comment.userName != user || comment.password != request.password) {
 //            throw ModelNotMatchException("author or password", request.userName, request.password)
 //        }
@@ -114,18 +112,18 @@ class CardServiceImpl(
         return commentRepository.save(comment).toResponse()
     }
 
-    override fun getCardByAuthor(
+    override fun getCardByUserId(
         cardId: Long,
-        author: String,
-        request: CallCardByAuthorRequest
+        userId: Long,
+        request: CallCardByUserIdRequest
     ): List<CardResponse> {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("card", cardId)
-        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
-        if (card.userName != user ) {
-            throw ModelNotFoundException("author", cardId)
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+        if (card.user != user ) {
+            throw ModelNotFoundException("userName", cardId)
         }
 
-        return cardRepository.findByAuthor(request.userName).map { it.toResponse() }
+        return cardRepository.findByUserId(request.userId).map { it.toResponse() }
 
     }
 
@@ -147,8 +145,8 @@ class CardServiceImpl(
         return cardRepository.searchCardListByComplete(isComplete).map { it.toResponse() }
     }
 
-    override fun getPaginatedCardList(pageable: Pageable, _isCompleted: Boolean?): Page<CardResponse>? {
-        val cardComplete = when (_isCompleted) {
+    override fun getPaginatedCardList(pageable: Pageable, isCompleted: Boolean?): Page<CardResponse>? {
+        val cardComplete = when (isCompleted) {
             false -> Complete.NO_COMPLETE
             true -> Complete.COMPLETE
             null -> null

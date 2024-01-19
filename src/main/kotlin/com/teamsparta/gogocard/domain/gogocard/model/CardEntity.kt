@@ -18,9 +18,9 @@ class CardEntity (
     @Column(name = "date", nullable = false)
     var date: LocalDateTime,
 
-    @Column(name = "author", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
-    var userName: UserEntity,
+    var user: UserEntity,
 
     @OneToMany(mappedBy = "card")
     var comments: MutableList<CommentEntity> = mutableListOf()
@@ -51,7 +51,7 @@ fun CardEntity.toResponse() : CardResponse {
         title = title,
         content = content,
         date = LocalDateTime.now(),
-        userName = userName.userName,
+        userId = user.id,
         complete = isCompleted
     )
 }
@@ -62,7 +62,7 @@ fun CardEntity.toResponseWithComments() : CardResponse {
         title = title,
         content = content,
         date = LocalDateTime.now(),
-        userName = userName.userName,
+        userId = user.id,
         complete = isCompleted,
         comments = comments.map { it.toResponse() }
     )

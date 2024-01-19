@@ -46,7 +46,7 @@ class CardControllerTest @Autowired constructor(
                     id = cardId,
                     title = "test_title",
                     content = "test_content",
-                    author = "test_author",
+                    userName = "name",
                     date = null,
                     complete = false,
                     comments = mutableListOf()

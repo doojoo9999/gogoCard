@@ -1,117 +1,176 @@
-api 정리 : https://docs.google.com/spreadsheets/d/1IWMzJh89v_LpKw273MpVAHRYexMn_mpybptselW3sUI/edit#gid=753593791
-
-
 # gogoCard API
 
 gogoCard API는 할 일 카드를 생성, 조회, 수정, 삭제할 수 있는 RESTful API입니다.
 
-## API 명세
 
-### 카드 생성
 
-- Method: POST
-- URL: http://{server_url}/api/gogocards
-- Request:
+---
+## Card API 명세
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| title | String | 필수 | 제목 |
-| content | String | 필수 | 내용 |
-| date | String | 필수 | 작성일 |
-| author | String | 필수 | 작성자 |
+### 카드 검색 (제목 기반)
 
-- Response:
+- **Endpoint**: `GET /api/cards/search/title`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Parameters**:
+    - `title` (string) - 검색하고자 하는 카드의 제목
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `List<CardResponse>`
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| id | Long | 필수 | 고유 id |
+### 카드 검색 (완료 여부 기반)
 
-### 카드 조회
+- **Endpoint**: `GET /api/cards/search/complete`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Parameters**:
+    - `isCompleted` (boolean) - 완료 여부
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `List<CardResponse>`
 
-- Method: GET
-- URL: http://{server_url}/api/gogocards/{id}
-- Request:
+### 전체 카드 목록 페이징하여 조회
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| id | Long | 필수 | 고유 id |
+- **Endpoint**: `GET /api/cards`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Parameters**:
+    - `page` (int) - 페이지 번호
+    - `size` (int) - 페이지 당 항목 수 (기본 15)
+    - `sort` (string) - 정렬 기준 (기본 'id')
+    - `_isCompleted` (boolean, optional) - 완료 여부 필터
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `Page<CardResponse>`
 
-- Response:
+### 특정 카드 상세 조회
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| title | String | 필수 | 제목 |
-| content | String | 필수 | 내용 |
-| date | String | 필수 | 작성일 |
-| author | String | 필수 | 작성자 |
+- **Endpoint**: `GET /api/cards/{cardId}`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 조회하고자 하는 카드의 ID
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `CardResponse`
 
-### 카드 목록 조회
+### 새로운 카드 생성
 
-- Method: GET
-- URL: http://{server_url}/api/gogocards
-- Request:
+- **Endpoint**: `POST /api/cards`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Request Body**: `CreateCardRequest`
+- **Success Response**:
+    - **Code**: `201 CREATED`
+    - **Content**: `CardResponse`
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| author | String | 필수 | 작성자 |
+### 기존 카드 업데이트
 
-- Response:
-
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| title | String | 필수 | 제목 |
-| id | Long | 필수 | 고유 id |
-
-### 카드 수정
-
-- Method: PUT
-- URL: http://{server_url}/api/gogocards/{id}
-- Request:
-
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| id | Long | 필수 | 고유 id |
-| title | String | 필수 | 제목 |
-| content | String | 필수 | 내용 |
-| author | String | 필수 | 작성자 |
-
-- Response:
-
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| isSuccess | Boolean | 필수 | 수정 성공 여부 |
-| id | Long | 필수 | 수정한 카드 id |
-| message | String | 필수 | 수정 성공 메세지 |
-| code | Int | 필수 | 응답 코드 |
+- **Endpoint**: `PUT /api/cards/{cardId}`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 업데이트 하고자 하는 카드의 ID
+- **Request Body**: `UpdateCardRequest`
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `CardResponse`
 
 ### 카드 삭제
 
-- Method: DELETE
-- URL: http://{server_url}/api/gogocards/{id}
-- Request:
+- **Endpoint**: `DELETE /api/cards/{cardId}`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 삭제하고자 하는 카드의 ID
+- **Success Response**:
+    - **Code**: `204 NO CONTENT`
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| id | Long | 필수 | 고유 id |
+### 카드에 댓글 생성
 
-- Response:
+- **Endpoint**: `POST /api/cards/{cardId}/comments`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 댓글을 생성할 카드의 ID
+- **Request Body**: `CreateCommentRequest`
+- **Success Response**:
+    - **Code**: `201 CREATED`
+    - **Content**: `CommentResponse`
 
-| 파라미터 | 타입 | 필수여부 | 설명 |
-| --- | --- | --- | --- |
-| success | Boolean | 필수 | 삭제 성공 여부 |
-| message | String | 필수 | 삭제 완료 메세지 |
-| error | String | 필수 | 에러 내용 반환 |
+### 카드의 댓글 업데이트
 
-## Result Code
+- **Endpoint**: `PUT /api/cards/{cardId}/comments/{commentId}`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 댓글이 있는 카드의 ID
+    - `commentId` (long) - 업데이트 하고자 하는 댓글의 ID
+- **Request Body**: `UpdateCommentRequest`
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `CommentResponse`
 
-| Code | message |
-| --- | --- |
-| 200 | 카드를 생성/조회/수정/삭제했습니다. |
-| 400 | 유효하지 않은 데이터입니다. |
-| 400 | 카드 제목을 입력해 주세요. |
-| 400 | 카드 내용을 입력해 주세요. |
-| 400 | 작성자를 입력해 주세요. |
+### 카드의 댓글 삭제
 
+- **Endpoint**: `DELETE /api/cards/{cardId}/comments/{commentId}`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 댓글이 있는 카드의 ID
+    - `commentId` (long) - 삭제하고자 하는 댓글의 ID
+- **Success Response**:
+    - **Code**: `204 NO CONTENT`
 
-![image](https://github.com/doojoo9999/gogoCard/assets/96476393/aa07688d-b265-4ace-81aa-5703b842ef9a)
+### 카드 목록 정렬하여 조회
 
+- **Endpoint**: `GET /api/cards/sort`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Parameters**:
+    - `sort` (string) - 정렬 방식 ('asc' 또는 'desc')
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `List<CardResponse>`
+
+### 카드 작성자 기반 조회
+
+- **Endpoint**: `GET /api/cards/{cardId}/author`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 조회하고자 하는 카드의 ID
+- **Parameters**:
+    - `author` (string) - 카드의 작성자
+- **Request**: `CallCardByAuthorRequest`
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `List<CardResponse>`
+
+### 카드 완료 처리
+
+- **Endpoint**: `PATCH /api/cards/{cardId}/complete`
+- **Auth Required**: Yes (Roles: MEMBER, ADMIN)
+- **Path Variables**:
+    - `cardId` (long) - 완료 처리할 카드의 ID
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `CardResponse`
+
+---
+
+## User API 명세
+
+### 사용자 회원가입
+
+- **Endpoint**: `POST /api/users/signup`
+- **Parameters**: 없음
+- **Request Body**:
+    - `CreateUserRequest` - 회원가입 정보가 담긴 객체
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `UserResponse` - 회원가입 후 반환되는 사용자 정보
+
+### 사용자 로그인
+
+- **Endpoint**: `POST /api/users/signin`
+- **Parameters**: 없음
+- **Request Body**:
+    - `SignInRequest` - 로그인 정보가 담긴 객체
+- **Success Response**:
+    - **Code**: `200 OK`
+    - **Content**: `SignInResponse` - 로그인 성공 후 반환되는 토큰 및 사용자 정보
+
+---
+
+## ERD
+
+![img.png](img.png)

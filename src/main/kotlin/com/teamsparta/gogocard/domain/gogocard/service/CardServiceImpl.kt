@@ -7,6 +7,7 @@ import com.teamsparta.gogocard.domain.gogocard.model.*
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepositoryImpl
+import com.teamsparta.gogocard.domain.user.repository.UserRepository
 import com.teamsparta.gogocard.infra.aop.StopWatch
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service
 class CardServiceImpl(
     private val cardRepository: CardRepository,
     private val commentRepository: CommentRepository,
+    private val userRepository: UserRepository,
     ) : CardService {
 
     override fun getCardList(): List<CardResponse> {
@@ -31,11 +33,12 @@ class CardServiceImpl(
         return card.toResponseWithComments()
     }
     override fun createCard(request: CreateCardRequest): CardResponse {
+        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
         return cardRepository.save(
             CardEntity(
                 title = request.title,
                 content = request.content,
-                author = request.author,
+                userName = user,
                 date = request.date,
             )
         ).toResponse()
@@ -44,11 +47,12 @@ class CardServiceImpl(
     @Transactional
     override fun updateCard(cardId:Long, request: UpdateCardRequest): CardResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("Card", cardId)
-        val (title, content, author) = request
+        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        val (title, content, userName) = request
 
         card.title = title
         card.content = content
-        card.author = author
+        card.userName = user
 
         return cardRepository.save(card).toResponse()
 
@@ -66,10 +70,11 @@ class CardServiceImpl(
         request: CreateCommentRequest
     ): CommentResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException ("card", cardId)
+        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
         val comment = CommentEntity(
             content = request.content,
             password = request.password,
-            author = request.author,
+            userName = user,
             card = card
         )
         return commentRepository.save(comment).toResponse()
@@ -82,9 +87,11 @@ class CardServiceImpl(
     ): CommentResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("Card", cardId)
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
-        if (comment.author != request.author || comment.password != request.password) {
-            throw ModelNotMatchException("author or password", request.author, request.password)
-        }
+        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+//        if (comment.userName != user || comment.password != request.password) {
+//            throw ModelNotMatchException("author or password", request.userName, request.password)
+//        }
+//        인가 기능 구현 헀으니, 검증 과정 삭제
         comment.content = request.content
         return commentRepository.save(comment).toResponse()
     }
@@ -98,9 +105,10 @@ class CardServiceImpl(
     ): CommentResponse {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("card", cardId)
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
-        if (comment.author != request.author || comment.password != request.password) {
-            throw ModelNotMatchException("author or password", request.author, request.password)
-        }
+//        if (comment.author != request.author || comment.password != request.password) {
+//            throw ModelNotMatchException("author or password", request.author, request.password)
+//        }
+//        인가 기능 구현 했으니 검증 과정 삭제함
         commentRepository.delete(comment)
 
         return commentRepository.save(comment).toResponse()
@@ -112,11 +120,12 @@ class CardServiceImpl(
         request: CallCardByAuthorRequest
     ): List<CardResponse> {
         val card = cardRepository.findByIdOrNull(cardId) ?: throw ModelNotFoundException("card", cardId)
-        if (card.author != request.author) {
+        val user = userRepository.findByUserName(request.userName) ?: throw IllegalStateException ("User Not Found")
+        if (card.userName != user ) {
             throw ModelNotFoundException("author", cardId)
         }
 
-        return cardRepository.findByAuthor(request.author).map { it.toResponse() }
+        return cardRepository.findByAuthor(request.userName).map { it.toResponse() }
 
     }
 

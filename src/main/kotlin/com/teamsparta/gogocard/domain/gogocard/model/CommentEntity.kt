@@ -2,6 +2,7 @@ package com.teamsparta.gogocard.domain.gogocard.model
 
 import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
 import com.teamsparta.gogocard.domain.gogocard.dto.CommentResponse
+import com.teamsparta.gogocard.domain.user.model.UserEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -14,8 +15,9 @@ class CommentEntity (
     @Column (name = "password", nullable = false)
     var password: String,
 
+    @ManyToOne
     @Column (name = "author", nullable = false)
-    var author: String,
+    var userName : UserEntity,
 
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
@@ -31,6 +33,6 @@ fun CommentEntity.toResponse() : CommentResponse {
     return CommentResponse(
         id = id,
         content = content,
-        author = author,
+        userName = userName.userName,
     )
 }

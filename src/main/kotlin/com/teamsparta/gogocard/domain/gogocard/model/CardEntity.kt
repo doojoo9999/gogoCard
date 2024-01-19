@@ -1,6 +1,7 @@
 package com.teamsparta.gogocard.domain.gogocard.model
 
 import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
+import com.teamsparta.gogocard.domain.user.model.UserEntity
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import java.time.LocalDateTime
@@ -18,7 +19,8 @@ class CardEntity (
     var date: LocalDateTime,
 
     @Column(name = "author", nullable = false)
-    var author: String,
+    @ManyToOne
+    var userName: UserEntity,
 
     @OneToMany(mappedBy = "card")
     var comments: MutableList<CommentEntity> = mutableListOf()
@@ -49,7 +51,7 @@ fun CardEntity.toResponse() : CardResponse {
         title = title,
         content = content,
         date = LocalDateTime.now(),
-        author = author,
+        userName = userName.userName,
         complete = isCompleted
     )
 }
@@ -60,7 +62,7 @@ fun CardEntity.toResponseWithComments() : CardResponse {
         title = title,
         content = content,
         date = LocalDateTime.now(),
-        author = author,
+        userName = userName.userName,
         complete = isCompleted,
         comments = comments.map { it.toResponse() }
     )

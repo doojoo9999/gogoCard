@@ -34,7 +34,7 @@ class CardEntity (
     private var _isCompleted: Boolean = false
 
     val isCompleted: Boolean
-        get() = if(_isCompleted) true else false
+        get() = if(_isCompleted) false else true
 
     fun complete() {
         if(_isCompleted == true) {

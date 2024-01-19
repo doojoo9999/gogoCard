@@ -22,10 +22,6 @@ class CardController(
     @GetMapping("/search/title")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     fun searchCardListWithTitle(
-        @PageableDefault(
-            size = 15,
-            sort = ["id"]
-        ) pageable: Pageable,
         @RequestParam(value = "title") title:String
     ): ResponseEntity<List<CardResponse>> {
         return ResponseEntity
@@ -36,10 +32,6 @@ class CardController(
     @GetMapping("/search/complete")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     fun searchCardListWithComplete(
-        @PageableDefault(
-            size = 15,
-            sort = ["id"]
-        ) pageable: Pageable,
         @RequestParam(value = "isCompleted") isCompleted:Boolean
     ): ResponseEntity<List<CardResponse>> {
         return ResponseEntity

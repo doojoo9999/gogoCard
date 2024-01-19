@@ -3,16 +3,15 @@ package com.teamsparta.gogocard.domain.gogocard.service
 import com.teamsparta.gogocard.domain.exception.ModelNotFoundException
 import com.teamsparta.gogocard.domain.exception.ModelNotMatchException
 import com.teamsparta.gogocard.domain.gogocard.dto.*
-import com.teamsparta.gogocard.domain.gogocard.model.CardEntity
-import com.teamsparta.gogocard.domain.gogocard.model.CommentEntity
-import com.teamsparta.gogocard.domain.gogocard.model.toResponse
-import com.teamsparta.gogocard.domain.gogocard.model.toResponseWithComments
+import com.teamsparta.gogocard.domain.gogocard.model.*
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository
+import com.teamsparta.gogocard.domain.gogocard.repository.CardRepositoryImpl
 import com.teamsparta.gogocard.infra.aop.StopWatch
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
@@ -129,5 +128,23 @@ class CardServiceImpl(
         card.complete()
 
         return cardRepository.save(card).toResponse()
+    }
+
+    override fun searchCardListWithTitle(title: String): List<CardResponse> {
+        return cardRepository.searchCardListByTitle(title).map { it.toResponse() }
+    }
+
+    override fun searchCardListWIthComplete(isComplete: Boolean): List<CardResponse> {
+        return cardRepository.searchCardListByComplete(isComplete).map { it.toResponse() }
+    }
+
+    override fun getPaginatedCardList(pageable: Pageable, _isCompleted: Boolean?): Page<CardResponse>? {
+        val cardComplete = when (_isCompleted) {
+            false -> Complete.NO_COMPLETE
+            true -> Complete.COMPLETE
+            null -> null
+        }
+
+        return cardRepository.findByPageableAndComplete(pageable, cardComplete).map { it.toResponse() }
     }
 }

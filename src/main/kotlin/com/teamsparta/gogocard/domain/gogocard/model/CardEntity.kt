@@ -32,9 +32,12 @@ class CardEntity (
     private var _isCompleted: Boolean = false
 
     val isCompleted: Boolean
-        get() = _isCompleted
+        get() = if(_isCompleted) true else false
 
     fun complete() {
+        if(_isCompleted == true) {
+            throw IllegalStateException ("complete already")
+        }
         _isCompleted = true
     }
 

@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm") version "1.9.21"
     kotlin("plugin.spring") version "1.9.21"
     kotlin("plugin.noarg") version "1.9.21"
+    kotlin("kapt") version "1.9.21"
 }
 
 noArg {
@@ -21,6 +22,8 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
 }
+
+
 
 group = "com.teamsparta"
 version = "0.0.1-SNAPSHOT"
@@ -41,6 +44,12 @@ repositories {
 
 extra["springModulithVersion"] = "1.1.0"
 
+val queryDslVersion = "5.0.0"
+
+val kotestVersion = "5.5.5"
+
+val mockkVersion = "1.13.8"
+
 dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -60,6 +69,17 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta")
+    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.fasterxml.jackson.core:jackson-core")
+    testImplementation("com.fasterxml.jackson.core:jackson-annotations")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    testImplementation("org.postgresql:postgresql")
 }
 
 dependencyManagement {
@@ -75,7 +95,7 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach() { // 변경 !!
     useJUnitPlatform()
 }
 

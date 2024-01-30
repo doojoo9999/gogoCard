@@ -11,6 +11,6 @@ interface CustomCardRepository {
 
     fun searchCardListByComplete(isCompleted: Boolean) : List<CardEntity>
 
-    fun findByPageableAndComplete (pageable: Pageable, courseComplete: Complete?): Page<CardEntity>
+    fun findByPageableAndComplete (pageable: Pageable, cardComplete: Complete?): Page<CardEntity>
 
 }

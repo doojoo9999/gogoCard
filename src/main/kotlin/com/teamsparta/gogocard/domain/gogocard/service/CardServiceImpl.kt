@@ -1,7 +1,9 @@
 package com.teamsparta.gogocard.domain.gogocard.service
 
 import com.teamsparta.gogocard.domain.exception.ModelNotFoundException
-import com.teamsparta.gogocard.domain.gogocard.dto.*
+import com.teamsparta.gogocard.domain.gogocard.dto.request.*
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CardResponse
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CommentResponse
 import com.teamsparta.gogocard.domain.gogocard.model.*
 import com.teamsparta.gogocard.domain.gogocard.repository.CardRepository
 import com.teamsparta.gogocard.domain.gogocard.repository.CommentRepository

@@ -1,9 +1,8 @@
 package com.teamsparta.gogocard.domain.gogocard.model
 
-import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CardResponse
 import com.teamsparta.gogocard.domain.user.model.UserEntity
 import jakarta.persistence.*
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import java.time.LocalDateTime
 
 @Entity

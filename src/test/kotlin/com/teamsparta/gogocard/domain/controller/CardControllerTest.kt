@@ -2,7 +2,7 @@ package com.teamsparta.gogocard.domain.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CardResponse
 import com.teamsparta.gogocard.domain.gogocard.service.CardService
 import com.teamsparta.gogocard.infra.security.jwt.JwtPlugin
 import io.kotest.core.spec.style.DescribeSpec
@@ -46,7 +46,7 @@ class CardControllerTest @Autowired constructor(
                     id = cardId,
                     title = "test_title",
                     content = "test_content",
-                    userName = "name",
+                    userId = 1,
                     date = null,
                     complete = false,
                     comments = mutableListOf()

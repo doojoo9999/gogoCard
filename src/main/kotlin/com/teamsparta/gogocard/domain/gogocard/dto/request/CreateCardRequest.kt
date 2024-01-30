@@ -1,4 +1,4 @@
-package com.teamsparta.gogocard.domain.gogocard.dto
+package com.teamsparta.gogocard.domain.gogocard.dto.request
 
 import java.time.LocalDateTime
 

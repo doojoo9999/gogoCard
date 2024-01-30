@@ -1,4 +1,4 @@
-package com.teamsparta.gogocard.domain.gogocard.dto
+package com.teamsparta.gogocard.domain.gogocard.dto.response
 
 import io.swagger.v3.oas.models.media.Content
 

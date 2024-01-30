@@ -1,6 +1,5 @@
-package com.teamsparta.gogocard.domain.gogocard.dto
+package com.teamsparta.gogocard.domain.gogocard.dto.response
 
-import com.teamsparta.gogocard.domain.gogocard.model.Complete
 import java.time.LocalDateTime
 
 data class CardResponse(

@@ -1,10 +1,8 @@
 package com.teamsparta.gogocard.domain.gogocard.model
 
-import com.teamsparta.gogocard.domain.gogocard.dto.CardResponse
-import com.teamsparta.gogocard.domain.gogocard.dto.CommentResponse
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CommentResponse
 import com.teamsparta.gogocard.domain.user.model.UserEntity
 import jakarta.persistence.*
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "comments")

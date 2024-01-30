@@ -1,6 +1,8 @@
 package com.teamsparta.gogocard.domain.gogocard.service
 
-import com.teamsparta.gogocard.domain.gogocard.dto.*
+import com.teamsparta.gogocard.domain.gogocard.dto.request.*
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CardResponse
+import com.teamsparta.gogocard.domain.gogocard.dto.response.CommentResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 

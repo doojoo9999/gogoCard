@@ -80,6 +80,11 @@ dependencies {
     testImplementation("com.fasterxml.jackson.core:jackson-databind")
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     testImplementation("org.postgresql:postgresql")
+
+    // 이메일
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
+
 }
 
 dependencyManagement {

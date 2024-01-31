@@ -14,9 +14,6 @@ class CardEntity (
     @Column(name = "content", nullable = false)
     var content: String,
 
-    @Column(name = "date", nullable = false)
-    var date: LocalDateTime,
-
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     var user: UserEntity,

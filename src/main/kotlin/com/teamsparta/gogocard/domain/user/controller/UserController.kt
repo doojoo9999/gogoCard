@@ -1,16 +1,15 @@
 package com.teamsparta.gogocard.domain.user.controller
 
 import com.teamsparta.gogocard.domain.user.dto.request.CreateUserRequest
+import com.teamsparta.gogocard.domain.user.dto.request.SendMailRequest
 import com.teamsparta.gogocard.domain.user.dto.request.SignInRequest
+import com.teamsparta.gogocard.domain.user.dto.response.SendMailResponse
 import com.teamsparta.gogocard.domain.user.dto.response.SignInResponse
 import com.teamsparta.gogocard.domain.user.dto.response.UserResponse
 import com.teamsparta.gogocard.domain.user.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/users")
 @RestController
@@ -36,5 +35,15 @@ class UserController (
             .body(userService.signIn(signInRequest))
 
     }
+
+    @PostMapping("/email")
+    fun sendMail(
+        @RequestParam sendMailRequest : SendMailRequest
+    ) : ResponseEntity<SendMailResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.sendMail(sendMailRequest))
+    }
+
 
 }

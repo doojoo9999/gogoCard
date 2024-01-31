@@ -46,7 +46,6 @@ fun CardEntity.toResponse() : CardResponse {
         id = id,
         title = title,
         content = content,
-        date = LocalDateTime.now(),
         userId = user.id,
         complete = isCompleted
     )
@@ -57,7 +56,6 @@ fun CardEntity.toResponseWithComments() : CardResponse {
         id = id,
         title = title,
         content = content,
-        date = LocalDateTime.now(),
         userId = user.id,
         complete = isCompleted,
         comments = comments.map { it.toResponse() }

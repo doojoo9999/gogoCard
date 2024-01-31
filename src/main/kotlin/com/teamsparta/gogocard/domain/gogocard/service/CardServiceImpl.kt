@@ -39,7 +39,7 @@ class CardServiceImpl(
                 title = request.title,
                 content = request.content,
                 user = user,
-                date = request.date,
+//                date = request.date,
             )
         ).toResponse()
     }

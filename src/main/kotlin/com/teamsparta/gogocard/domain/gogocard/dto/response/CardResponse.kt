@@ -6,7 +6,6 @@ data class CardResponse(
     val id: Long,
     val title: String,
     val content: String,
-    val date: LocalDateTime?,
     val userId: Long,
     val complete: Boolean,
     val comments : List<CommentResponse> ?= null

@@ -130,18 +130,18 @@ class CardController(
             .build()
     }
 
-    @GetMapping("/sort")
-    @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
-    fun getCardListBySort(
-        @RequestParam("sort") sort: String
-    ): List<CardResponse> {
-        val card = cardRepository.findAll()
-        return when (sort) {
-            "asc" -> card.sortedBy { it.date }
-            "desc" -> card.sortedByDescending { it.date }
-            else -> card.sortedBy { it.date }
-        }.map { it.toResponse() }
-    }
+//    @GetMapping("/sort")
+//    @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
+//    fun getCardListBySort(
+//        @RequestParam("sort") sort: String
+//    ): List<CardResponse> {
+//        val card = cardRepository.findAll()
+//        return when (sort) {
+//            "asc" -> card.sortedBy { it.date }
+//            "desc" -> card.sortedByDescending { it.date }
+//            else -> card.sortedBy { it.date }
+//        }.map { it.toResponse() }
+//    }
 
     @GetMapping("/{cardId}/author")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")

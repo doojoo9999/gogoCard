@@ -4,8 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-application.properties
-*.yml
+
 
 
 
@@ -29,6 +28,8 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+application.properties
+*.yml
 
 ### NetBeans ###
 /nbproject/private/

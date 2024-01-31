@@ -67,7 +67,7 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun sendMail(request: SendMailRequest): SendMailResponse {
+    override fun sendMail(email : String): SendMailResponse {
 
         //인증 번호 만들기
         val length = 6
@@ -76,15 +76,15 @@ class UserServiceImpl(
         //이메일 발송하기
         val message = javaMailSender.createMimeMessage()
         val helper = MimeMessageHelper(message)
-        helper.setTo(request.email)
+        helper.setTo(email)
         helper.setSubject("gogoCard 이메일 인증")
         helper.setText("인증 코드 : $randomString")
-        helper.setFrom("admin@gogoCard.xyz")
+        helper.setFrom("doojoo0536@gmail.com")
         javaMailSender.send(message)
 
         mailRepository.save(
             MailEntity(
-                email = request.email,
+                email = email,
                 authcode = randomString
             )
         )

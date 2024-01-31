@@ -17,7 +17,7 @@ class UserEntity (
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    var role: UserRole
+    var role: UserRole,
 
 ){
     @Id

@@ -13,5 +13,5 @@ interface UserService {
 
     fun signIn(request: SignInRequest) : SignInResponse
 
-    fun sendMail(request: SendMailRequest) : SendMailResponse
+    fun sendMail(email : String) : SendMailResponse
 }

@@ -9,18 +9,22 @@ import com.teamsparta.gogocard.domain.user.dto.response.UserResponse
 import com.teamsparta.gogocard.domain.user.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/api/users")
 @RestController
-class UserController (
+class UserController(
     private val userService: UserService
-){
+) {
 
     @PostMapping("/signup")
     fun signUp(
         @RequestBody createUserRequest: CreateUserRequest
-    ) : ResponseEntity<UserResponse> {
+    ): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.signUp(createUserRequest))
@@ -29,7 +33,7 @@ class UserController (
     @PostMapping("/signin")
     fun signIn(
         @RequestBody signInRequest: SignInRequest
-    ) : ResponseEntity<SignInResponse> {
+    ): ResponseEntity<SignInResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.signIn(signInRequest))
@@ -38,11 +42,11 @@ class UserController (
 
     @PostMapping("/email")
     fun sendMail(
-        @RequestParam sendMailRequest : SendMailRequest
-    ) : ResponseEntity<SendMailResponse> {
+        @RequestParam email : String
+    ): ResponseEntity<SendMailResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(userService.sendMail(sendMailRequest))
+            .body(userService.sendMail(email))
     }
 
 

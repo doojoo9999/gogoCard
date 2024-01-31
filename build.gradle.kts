@@ -42,8 +42,6 @@ repositories {
     mavenCentral()
 }
 
-extra["springModulithVersion"] = "1.1.0"
-
 val queryDslVersion = "5.0.0"
 
 val kotestVersion = "5.5.5"
@@ -53,13 +51,12 @@ val mockkVersion = "1.13.8"
 dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.modulith:spring-modulith-starter-core")
+    implementation("org.springframework.boot:spring-boot-starter-web-services")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
@@ -85,12 +82,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
 
 
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.modulith:spring-modulith-bom:${property("springModulithVersion")}")
-    }
 }
 
 tasks.withType<KotlinCompile> {

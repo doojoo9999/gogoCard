@@ -33,16 +33,16 @@ class UserServiceImpl(
     @Transactional
     override fun signUp(request: CreateUserRequest): UserResponse {
 
-        val getAuthCode = mailRepository.findAllByEmail(request.email)?.authcode
+        val getAuthCode = mailRepository.findAllByEmail(request.email)
             ?: throw ModelNotFoundException("Email", null)
 
-        if (request.authcode != getAuthCode) {
+        if (getAuthCode.none { it.authcode == request.authcode }) {
             throw IllegalStateException("인증 코드가 틀렸습니다.")
-        } else (
+        }
 
-                if (userRepository.existsByEmail(request.email)) {
-                    throw IllegalStateException("이미 존재하는 이메일입니다.")
-                })
+        if (userRepository.existsByEmail(request.email)) {
+            throw IllegalStateException("이미 존재하는 이메일입니다.")
+        }
 
         mailRepository.deleteByEmail(request.email)
 
@@ -93,8 +93,22 @@ class UserServiceImpl(
 
 //@Transactional 트랜잭션을 뺀 이유 : 이걸 해두면 같은 작업이 반복될 때 최초 1개 이메일에 대해서만 DB에 저장되었음.
     //아마 같은 요청이 반복되면 하나의 작업으로 인식하는 것 같음.
+
     override fun sendMail(email: String): SendMailResponse {
-//        //Utility로 뺌
+
+        val randomString = mailUtility.sendMail(email)
+
+        mailRepository.save(
+            MailEntity(
+                email = email,
+                authcode = randomString
+            )
+        )
+
+        return SendMailResponse(message = "메일 발송 완료")
+
+
+    //        //Utility로 뺌
 //        //인증 번호 만들기
 //        val length = 6
 //        val randomString = getRandomString(length)
@@ -109,18 +123,8 @@ class UserServiceImpl(
 //        javaMailSender.send(message)
 
 
-        val randomString = mailUtility.sendMail(email)
+}
 
-        mailRepository.save(
-            MailEntity(
-                email = email,
-                authcode = randomString
-            )
-        )
-
-        return SendMailResponse(message = "메일 발송 완료")
-
-    }
 
 
 }

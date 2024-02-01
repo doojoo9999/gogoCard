@@ -11,6 +11,7 @@ import com.teamsparta.gogocard.domain.user.dto.response.UserResponse
 import com.teamsparta.gogocard.domain.user.model.*
 import com.teamsparta.gogocard.domain.user.repository.MailRepository
 import com.teamsparta.gogocard.domain.user.repository.UserRepository
+import com.teamsparta.gogocard.domain.utility.MailUtility
 import com.teamsparta.gogocard.infra.security.jwt.JwtPlugin
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -24,8 +25,8 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
-    private val javaMailSender : JavaMailSender,
-    private val mailRepository: MailRepository
+    private val mailRepository: MailRepository,
+    private val mailUtility: MailUtility
 ) : UserService {
 
     @Transactional
@@ -68,29 +69,32 @@ class UserServiceImpl(
 
     @Transactional
     override fun sendMail(email : String): SendMailResponse {
+//        //Utility로 뺌
+//        //인증 번호 만들기
+//        val length = 6
+//        val randomString = getRandomString(length)
+//
+//        //이메일 발송하기
+//        val message = javaMailSender.createMimeMessage()
+//        val helper = MimeMessageHelper(message)
+//        helper.setTo(email)
+//        helper.setSubject("gogoCard 이메일 인증")
+//        helper.setText("인증 코드 : $randomString")
+//        helper.setFrom("doojoo0536@gmail.com")
+//        javaMailSender.send(message)
 
-        //인증 번호 만들기
-        val length = 6
-        val randomString = getRandomString(length)
+        val createAuthCode = mailUtility.getRandomString(6)
 
-        //이메일 발송하기
-        val message = javaMailSender.createMimeMessage()
-        val helper = MimeMessageHelper(message)
-        helper.setTo(email)
-        helper.setSubject("gogoCard 이메일 인증")
-        helper.setText("인증 코드 : $randomString")
-        helper.setFrom("doojoo0536@gmail.com")
-        javaMailSender.send(message)
+        mailUtility.sendMail(createAuthCode)
 
         mailRepository.save(
             MailEntity(
                 email = email,
-                authcode = randomString
+                authcode = createAuthCode
             )
         )
 
-
-        return SendMailResponse("메일 발송 완료")
+        return SendMailResponse(message = "메일 발송 완료")
 
     }
 

@@ -33,7 +33,7 @@ class UserServiceImpl(
     @Transactional
     override fun signUp(request: CreateUserRequest): UserResponse {
 
-        val getAuthCode = mailRepository.findByEmail(request.email)?.authcode
+        val getAuthCode = mailRepository.findAllByEmail(request.email)?.authcode
             ?: throw ModelNotFoundException("Email", null)
 
         if (request.authcode != getAuthCode) {

@@ -13,6 +13,7 @@ import com.teamsparta.gogocard.domain.user.repository.MailRepository
 import com.teamsparta.gogocard.domain.user.repository.UserRepository
 import com.teamsparta.gogocard.domain.utility.MailUtility
 import com.teamsparta.gogocard.infra.security.jwt.JwtPlugin
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -31,24 +32,47 @@ class UserServiceImpl(
 
     @Transactional
     override fun signUp(request: CreateUserRequest): UserResponse {
-        if (userRepository.existsByEmail(request.email)) {
-            throw IllegalStateException("email is already in use")
-        }
+
+        val getAuthCode = mailRepository.findByEmail(request.email)?.authcode
+            ?: throw ModelNotFoundException("Email", null)
+
+        if (request.authcode != getAuthCode) {
+            throw IllegalStateException("인증 코드가 틀렸습니다.")
+        } else (
+
+                if (userRepository.existsByEmail(request.email)) {
+                    throw IllegalStateException("이미 존재하는 이메일입니다.")
+                })
+
+        mailRepository.deleteByEmail(request.email)
 
         return userRepository.save(
             UserEntity(
+                userName = request.userName,
                 email = request.email,
                 password = passwordEncoder.encode(request.password),
-                userName = request.userName,
-                role = when (request.role) {
-                    "MEMBER" -> UserRole.MEMBER
-                    "ADMIN" -> UserRole.ADMIN
-                    else -> throw IllegalArgumentException("Invalid Role")
-                }
-            )
+                role = request.role)
         ).toResponse()
-
     }
+
+
+//        if (userRepository.existsByEmail(request.email)) {
+//            throw IllegalStateException("email is already in use")
+//        }
+//
+//        return userRepository.save(
+//            UserEntity(
+//                email = request.email,
+//                password = passwordEncoder.encode(request.password),
+//                userName = request.userName,
+//                role = when (request.role) {
+//                    "MEMBER" -> UserRole.MEMBER
+//                    "ADMIN" -> UserRole.ADMIN
+//                    else -> throw IllegalArgumentException("Invalid Role")
+//                }
+//            )
+//        ).toResponse()
+
 
     @Transactional
     override fun signIn(request: SignInRequest): SignInResponse {
@@ -67,8 +91,9 @@ class UserServiceImpl(
 
     }
 
-    @Transactional
-    override fun sendMail(email : String): SendMailResponse {
+//@Transactional 트랜잭션을 뺀 이유 : 이걸 해두면 같은 작업이 반복될 때 최초 1개 이메일에 대해서만 DB에 저장되었음.
+    //아마 같은 요청이 반복되면 하나의 작업으로 인식하는 것 같음.
+    override fun sendMail(email: String): SendMailResponse {
 //        //Utility로 뺌
 //        //인증 번호 만들기
 //        val length = 6
@@ -83,14 +108,13 @@ class UserServiceImpl(
 //        helper.setFrom("doojoo0536@gmail.com")
 //        javaMailSender.send(message)
 
-        val createAuthCode = mailUtility.getRandomString(6)
 
-        mailUtility.sendMail(createAuthCode)
+        val randomString = mailUtility.sendMail(email)
 
         mailRepository.save(
             MailEntity(
                 email = email,
-                authcode = createAuthCode
+                authcode = randomString
             )
         )
 
